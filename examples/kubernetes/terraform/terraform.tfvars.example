@@ -1,6 +1,0 @@
-k8s_instances="1"
-k8s_container="lanceplarsen/go-vault-demo"
-vault_host="localhost"
-vault_port="8200"
-vault_scheme="http"
-postgres_host="localhost"

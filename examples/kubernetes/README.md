@@ -2,12 +2,25 @@
 
 This folder will help you deploy the sample app to Kubernetes.
 
-Run the additional [vault script](vault.sh) in this folder to configure the Kubernetes trust relationship with Vault.
+To establish trust between the K8s you can run the [vault script](vault.sh) in this folder. You will need to update the K8s endpoint and CA for your environment.
 
-An example configmap is included for you to deploy to an existing Kubernetes cluster. The workload is modeled as code in the [go.tf](terraform/go.tf) terraform file.
+You will then need to update the [ConfigMap](go-config.yaml) for your environment. You can then deploy the application with the following. An [example config](config.toml) can be found in this folder.
 
-If you prefer to manage Kubernetes with Terraform you can use the Terraform code included in the folder. Here are two projects to help you get a Kubernetes cluster with Terraform:
+```
+$ kubectl apply -f go-config.yaml
+configmap/go created
 
-- Azure: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/k8s-cluster-acs
-- GKE: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/k8s-cluster-gke
-- AWS: https://www.terraform.io/docs/providers/aws/guides/eks-getting-started.html
+$ kubectl apply -f go-pod.yaml
+pod/go created
+
+$ kubectl apply -f go-service.yaml
+service/go created
+```
+
+Then verify your pod is running:
+
+```
+kubectl get pod go
+NAME   READY   STATUS    RESTARTS   AGE
+go     1/1     Running   0          16s
+```

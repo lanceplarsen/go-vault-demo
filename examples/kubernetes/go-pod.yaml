@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: go
+  labels:
+    app: go
+spec:
+  containers:
+  - name: go
+    image: lanceplarsen/go-vault-demo
+    ports:
+    - containerPort: 3000
+    volumeMounts:
+    - name: config
+      mountPath: /app/config.toml
+      subPath: config.toml
+  volumes:
+  - configMap:
+      items:
+      - key: config
+        path: config.toml
+      name: go
+    name: config
+  serviceAccountName: go
+  automountServiceAccountToken: true
