@@ -23,20 +23,20 @@ type Transit struct {
 	Mount string
 }
 
-func (o *Order) GetOrders() ([]models.Order, error) {
+func (o *Order) GetOrders() (models.OrdersResp, error) {
 	var eOrders []models.Order
 	var dOrders []models.Order
 
 	eOrders, err := o.Dao.FindAll()
 	if err != nil {
-		return []models.Order{}, err
+		return models.OrdersResp{}, err
 	}
 
 	//Decrypt these. TODO Could use a batch decyrpt opp here
 	for _, order := range eOrders {
 		dOrder, err := o.Vault.Decrypt(fmt.Sprintf("%s/decrypt/%s", o.Encyrption.Mount, o.Encyrption.Key), order.CustomerName)
 		if err != nil {
-			log.Printf("Unable to decrypt order: %s", strconv.FormatInt(order.Id, 10))
+			log.Printf("Unable to decrypt order: %s", strconv.FormatInt(order.ID, 10))
 		} else {
 			sDec, _ := base64.StdEncoding.DecodeString(dOrder)
 			order.CustomerName = string(sDec)
@@ -44,7 +44,11 @@ func (o *Order) GetOrders() ([]models.Order, error) {
 		}
 	}
 
-	return dOrders, nil
+	//Create our response payload
+	ordersResp := models.OrdersResp{}
+	ordersResp.Orders = dOrders
+
+	return ordersResp, nil
 }
 
 func (o *Order) CreateOrder(order models.Order) (models.Order, error) {

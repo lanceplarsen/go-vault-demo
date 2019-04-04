@@ -25,6 +25,7 @@ type Config struct {
 		Authentication string `toml:"authentication"`
 		Mount          string `toml:"mount"`
 		Role           string `toml:"role"`
+		Namespace      string `toml:"namespace"`
 		Credential     struct {
 			RoleID         string `mapstructure:"role-id"`
 			SecretID       string `mapstructure:"secret-id"`

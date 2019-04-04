@@ -31,6 +31,7 @@ type Vault struct {
 	Authentication string
 	Role           string
 	Mount          string
+	Namespace	     string
 	Credential     Credential
 }
 
@@ -65,6 +66,12 @@ func (v *Vault) Initialize() error {
 	err = client.SetAddress(fmt.Sprintf("%s://%s:%s", v.Scheme, v.Host, v.Port))
 	if err != nil {
 		return err
+	}
+
+	//Set the namespace if we have one
+	if len(v.Namespace) > 0 {
+		log.Println("Namespace: " + v.Namespace)
+		client.SetNamespace(v.Namespace)
 	}
 
 	//Auth to Vault
