@@ -14,8 +14,8 @@ import (
 	"github.com/dimiro1/health"
 	"github.com/dimiro1/health/db"
 	"github.com/dimiro1/health/url"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"github.com/lanceplarsen/go-vault-demo/client"
 	"github.com/lanceplarsen/go-vault-demo/config"
 	"github.com/lanceplarsen/go-vault-demo/dao"
@@ -33,11 +33,11 @@ func AllOrdersEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	/*
-	if len(orders) > 0 {
-		respondWithJson(w, http.StatusOK, orders)
-	} else {
-		respondWithJson(w, http.StatusOK, map[string]string{"orders": "No orders"})
-	}
+		if len(orders) > 0 {
+			respondWithJson(w, http.StatusOK, orders)
+		} else {
+			respondWithJson(w, http.StatusOK, map[string]string{"orders": "No orders"})
+		}
 	*/
 	respondWithJson(w, http.StatusOK, orders)
 }
@@ -186,7 +186,7 @@ func main() {
 	r.Path("/health").Handler(h).Methods("GET")
 
 	//CORS
-	corsObj:=handlers.AllowedOrigins([]string{"*"})
+	corsObj := handlers.AllowedOrigins([]string{"*"})
 
 	//Server config - http
 	go func() {
