@@ -14,6 +14,7 @@ import (
 	"github.com/dimiro1/health"
 	"github.com/dimiro1/health/db"
 	"github.com/dimiro1/health/url"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/lanceplarsen/go-vault-demo/client"
 	"github.com/lanceplarsen/go-vault-demo/config"
@@ -31,11 +32,14 @@ func AllOrdersEndpoint(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if len(orders) > 0 {
-		respondWithJson(w, http.StatusOK, orders)
-	} else {
-		respondWithJson(w, http.StatusOK, map[string]string{"result": "No orders"})
-	}
+	/*
+		if len(orders) > 0 {
+			respondWithJson(w, http.StatusOK, orders)
+		} else {
+			respondWithJson(w, http.StatusOK, map[string]string{"orders": "No orders"})
+		}
+	*/
+	respondWithJson(w, http.StatusOK, orders)
 }
 
 func CreateOrderEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +100,7 @@ func main() {
 		Authentication: config.Vault.Authentication,
 		Role:           config.Vault.Role,
 		Mount:          config.Vault.Mount,
+		Namespace:      config.Vault.Namespace,
 		Credential:     credential,
 	}
 
@@ -180,10 +185,13 @@ func main() {
 	h.AddChecker("Vault", url.NewChecker(fmt.Sprintf("%s://%s:%s/v1/sys/health?perfstandbyok=true", config.Vault.Scheme, config.Vault.Host, config.Vault.Port)))
 	r.Path("/health").Handler(h).Methods("GET")
 
+	//CORS
+	corsObj := handlers.AllowedOrigins([]string{"*"})
+
 	//Server config - http
 	go func() {
 		log.Println(fmt.Sprintf("Server is now accepting http requests on port %v", config.Server.Port))
-		if err := http.ListenAndServe(fmt.Sprintf(":%v", config.Server.Port), r); err != nil {
+		if err := http.ListenAndServe(fmt.Sprintf(":%v", config.Server.Port), handlers.CORS(corsObj)(r)); err != nil {
 			log.Fatal(err)
 		}
 	}()
