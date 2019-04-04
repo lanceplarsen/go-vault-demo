@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  config: |
+    [server]
+    port="3000"
+    [database]
+    host="127.0.0.1"
+    port="5432"
+    name="postgres"
+    [vault]
+    host="127.0.0.1"
+    port="8200"
+    scheme="http"
+    authentication="kubernetes"
+    mount="kubernetes"
+    role="order"
+    [vault.credential]
+    serviceaccount="/var/run/secrets/kubernetes.io/serviceaccount/token"
+    [vault.database]
+    mount="database"
+    role="order"
+    [vault.transit]
+    key="order"
+    mount="transit"
+    [vault.pki]
+    mount="pki"
+    role="order"
+    cn="order.hashidemos.io"
+metadata:
+  name: go
+  namespace: default
