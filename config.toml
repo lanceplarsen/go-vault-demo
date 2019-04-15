@@ -9,7 +9,7 @@ host="127.0.0.1"
 port="8200"
 scheme="http"
 authentication="token"
-namespace="trainer"
+#namespace="namespace"
 [vault.credential]
 #token="s.000000000000000000000000"
 [vault.database]
