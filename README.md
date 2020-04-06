@@ -2,7 +2,6 @@
 
 Go example for hybrid auth, dynamic secrets, and encryption with HashiCorp Vault.
 This project handles tokens and secrets in-memory, and is API driven. If you're looking for a templated approach, check out [Vault Agent](https://www.vaultproject.io/docs/agent/)
-----
 
 ## Demo Instruction
 
